@@ -17,7 +17,7 @@ app.use(cors());
 app.get('/',(req,res)=>{
     res.send('Hello World from Express!');
 })
-app.post('/clerk', express.json(), (req, res) => {})
+app.post('/clerk', express.json(), clerkWebhooks)
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
