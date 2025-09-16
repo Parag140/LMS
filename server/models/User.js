@@ -1,4 +1,4 @@
-import express from "express";
+
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   imageUrl: { type: String, required: true },
-  enrollesCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course" }],
+  enrolledCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course" }],
 },{timestamps: true});
 
 const User = mongoose.model("User", userSchema);
