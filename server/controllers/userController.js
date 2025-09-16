@@ -83,5 +83,11 @@ export const purchaseCourse = async (req, res) => {
         }
     })
     res.json({ success: true, session_url: session.url });
-  } catch (error) {}
+  } catch (error) {
+    res.json({
+      success: false,
+      message: "Error while purchasing course",
+      error: error.message,
+    });
+  }
 };

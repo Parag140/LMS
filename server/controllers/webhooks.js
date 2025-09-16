@@ -63,7 +63,7 @@ export const stripeWebhooks = async (request, response) => {
     event = Stripe.webhooks.constructEvent(
       request.body,
       sig,
-      process.env.SRIPE_WEBHOOK_SECRET
+      process.env.STRIPE_WEBHOOK_SECRET
     );
   } catch (err) {
     response.status(400).send(`Webhook Error: ${err.message}`);
@@ -90,7 +90,7 @@ export const stripeWebhooks = async (request, response) => {
 
       userData.enrolledCourses.push(courseData._id);
       await userData.save();
-      purchaseData.status("completed");
+      purchaseData.status = 'completed';
       await purchaseData.save();
       break;
     }
@@ -103,7 +103,7 @@ export const stripeWebhooks = async (request, response) => {
       });
       const { purchaseId } = session.data[0].metadata;
       const purchaseData = await Purchase.findById(purchaseId);
-      purchaseData.status("failed");
+      purchaseData.status = 'failed';
       await purchaseData.save();
 
       break;
