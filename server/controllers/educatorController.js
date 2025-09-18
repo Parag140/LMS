@@ -65,7 +65,7 @@ export const getEducatorCourses = async (req, res) => {
     res.json({
       success: false,
       message: "error aa raha hai",
-      message: error.message,
+      message: error.message, //-----------------------------------------------------//
     });
   }
 };
@@ -120,12 +120,12 @@ export const getEnrolledStudentsData = async (req, res) => {
       courseId: { $in: courseIds },
       status: "completed",
     }).populate('userId', 'name imageUrl').populate('courseId', 'courseTitle');
-    const enrolledStudents = Purchase.map((purchase) => ({
+    const enrolledStudents = purchases.map((purchase) => ({
       student: purchase.userId,
       courseTitle: purchase.courseId.courseTitle,
       purchaseDate: purchase.createdAt,
     }));
-    res.json({ success: true, enrolledStudents });
+    res.json({ success: true, enrolledStudents , message:"successfull get enrolled users"});
 
   } catch (error) {
     res.json({ success: false, message: error.message });
