@@ -47,7 +47,7 @@ export const addCourse = async (req, res) => {
   } catch (error) {
     res.json({
       success: false,
-      message: "error aa raha hai",
+      message: "error in adding couse",
       error: error.message,
     });
   }
