@@ -8,15 +8,17 @@ import Footer from '../../components/student/Footer'
 
 const Home = () => {
   return (
-    <div className='flex flex-col items-center space-y-7 text-center '>
-      <Hero/>
-      <Companies/>
-      <CourseSection/>
-      <TestimonialsSections/>
-      <CallTOAction/>
-      <Footer/>
+    // Light blue gradient (soft and consistent across the page)
+    <div className="min-h-screen w-full bg-gradient-to-b from-blue-200 via-blue-100 to-white">
+      <div className="flex flex-col items-center text-center">
+        <Hero />
+        <Companies />
+        <CourseSection />
+        <TestimonialsSections />
+        <CallTOAction />
+        <Footer />
+      </div>
     </div>
-   
   )
 }
 

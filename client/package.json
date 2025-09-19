@@ -12,6 +12,7 @@
   "dependencies": {
     "@clerk/clerk-react": "^5.46.0",
     "axios": "^1.12.2",
+    "framer-motion": "^12.23.16",
     "humanize-duration": "^3.33.0",
     "quill": "^2.0.3",
     "rc-progress": "^4.0.0",

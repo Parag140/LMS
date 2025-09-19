@@ -28,26 +28,48 @@ export const addCourse = async (req, res) => {
     const { courseData } = req.body;
     const imageFile = req.file;
     const educatorId = req.auth().userId;
+
     if (!imageFile) {
       return res
         .status(400)
-        .json({ message: "Please upload a course thumbnail" });
+        .json({ success: false, message: "Please upload a course thumbnail" });
     }
-    const parsedCourseData = await JSON.parse(courseData); // ye string ki form me aata hh isee json parse kar ke object banaaya
-    parsedCourseData.educator = educatorId; // parsed data object me educator id add karega
-    const newCourse = await Course.create(parsedCourseData); // ab ye course data mongodb me create kar krega
-    const imageUpload = await cloudinary.uploader.upload(imageFile.path); // ab image upload karega clodinary me
-    newCourse.courseThumbnail = imageUpload.secure_url; // clodinary se secure_url milta hai jise hame course thumbnail me dalenga
-    await newCourse.save(); // course update kar dia finally
-    res.json({
-      success: true,
-      message: "Course added successfully",
-      Course: newCourse,
+
+    // --- Step 1: Upload the image to Cloudinary FIRST ---
+    // This is the most likely point of failure. If it fails, we haven't touched our database.
+    const imageUpload = await cloudinary.uploader.upload(imageFile.path, {
+        folder: "course_thumbnails", // Good practice: organize uploads
     });
+
+    // Check if the upload was successful and we got a URL
+    if (!imageUpload || !imageUpload.secure_url) {
+        throw new Error("Cloudinary image upload failed. Please try again.");
+    }
+    
+    // --- Step 2: Prepare all data for the database ---
+    const parsedCourseData = JSON.parse(courseData); // No need for await here
+    
+    // Add the educator ID and the successfully uploaded image URL
+    parsedCourseData.educator = educatorId;
+    parsedCourseData.courseThumbnail = imageUpload.secure_url; 
+
+    // --- Step 3: Create the course in a single, atomic operation ---
+    // Now we create the course with ALL the required data at once.
+    const newCourse = await Course.create(parsedCourseData);
+
+    // Use 201 status for "Created"
+    res.status(201).json({
+      success: true,
+      message: "Course created successfully!",
+      course: newCourse, // Use lowercase 'c' for consistency
+    });
+
   } catch (error) {
-    res.json({
+    // Provide a more informative error message
+    console.error("Error in addCourse:", error); // Log the full error on the server
+    res.status(500).json({
       success: false,
-      message: "error in adding couse",
+      message: "Error creating course. See server logs for details.",
       error: error.message,
     });
   }
